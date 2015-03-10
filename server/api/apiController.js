@@ -21,7 +21,9 @@ module.exports = {
               LolApi.Summoner.getByName(name, function(err, summoner) {
                   if(!err) {
                     //TODO: add information to db!
-                    req.id = summoner[name].id;
+                    for(var prop in summoner){
+                      req.id = summoner[prop].id;
+                    }
                     next();
                     console.log(summoner);
 
