@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  margin-top: 10px;
+  /*margin-top: 10px;*/
   font-family: arial, sans-serif;
 }
 
@@ -50,7 +50,7 @@ h1 {
 
 #container {
   clear: both;
-  margin-top: 10px;
+  /*margin-top: 10px;*/
 }
 
 .link {
@@ -101,7 +101,7 @@ input {
   width: 360px;
   display: block;
   font-size: 13px;
-  padding: 5px;
+  /*padding: 5px;*/
   margin-bottom: 5px;
 }
 
