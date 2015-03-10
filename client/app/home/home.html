@@ -1,0 +1,26 @@
+<div id='home'>
+  <h1>home</h1>
+  <form name="searchForm" ng-submit='search()'>
+    <!-- <input type='text'ng-model='user.name'> -->
+    <!-- <input type="select" ng-model='user.password'> -->
+    <md-input-container required flex>
+          <label>Summoner Name</label>
+          <input required name="summonerName" ng-model="user.firstName" placeholder="">
+          <div ng-messages="searchForm.summonerName.$error">
+          <div ng-message="required">This is required.</div>
+        </div>
+      </md-input-container>
+    <md-select required ng-model="user.region" placeholder="Region">
+      <md-option value="NA" selected="selected">NA</md-option>
+      <md-option value="EUW">EUW</md-option>
+      <div ng-messages="searchForm.clientName.$error">
+          <div ng-message="required">This is required.</div>
+        </div>
+    </md-select>
+    <md-button ng-click="selected=true">Search</md-button>
+    <!-- <button>Search</button> -->
+  </form>
+  {{user}}
+  {{region}}
+  <a href="#/signup">Don't have an account? <strong>Signup</strong> ...</a>
+</div>

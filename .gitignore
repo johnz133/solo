@@ -1,5 +1,6 @@
 ### node etc ###
 server/config.js
+/bower_components
 
 # Logs
 logs
