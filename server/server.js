@@ -49,7 +49,7 @@ var app = express();
 //     console.log(summoner);
 // });
 
-mongoose.connect('mongodb://localhost/dyerb'); // connect to mongo database named shortly
+mongoose.connect(process.env.dbuser? 'mongodb://'+process.env.dbuser+':'+process.env.dbpassword+'@ds031108.mongolab.com:31108/MongoLab-q':'mongodb://localhost/dyerb'); // connect to mongo database named shortly
 
 // configure our server with all the middleware and and routing
 require('./utils/middleware.js')(app, express);

@@ -3,7 +3,7 @@ var Q         = require('q'),
 
 var config      = require('./../config.js');
 var LolApi = require('leagueapi');
-LolApi.init(config.apiKey, 'na');
+LolApi.init(process.env.riotKey || config.apiKey, 'na');
 
 module.exports = {
   addRegion: function(req, res, next, region){
