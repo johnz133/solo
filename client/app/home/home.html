@@ -1,11 +1,11 @@
 <div id='home'>
   <h1>home</h1>
-  <form name="searchForm" ng-submit='search()'>
+  <form name="searchForm" ng-submit='search()' layout="row" layout-sm="column" layout-align="space-around">
     <!-- <input type='text'ng-model='user.name'> -->
     <!-- <input type="select" ng-model='user.password'> -->
     <md-input-container required flex>
           <label>Summoner Name</label>
-          <input required name="summonerName" ng-model="user.firstName" placeholder="">
+          <input required name="summonerName" ng-model="user.name" placeholder="">
           <div ng-messages="searchForm.summonerName.$error">
           <div ng-message="required">This is required.</div>
         </div>
@@ -20,7 +20,23 @@
     <md-button ng-click="selected=true">Search</md-button>
     <!-- <button>Search</button> -->
   </form>
-  {{user}}
-  {{region}}
-  <a href="#/signup">Don't have an account? <strong>Signup</strong> ...</a>
+  <div layout="row" layout-sm="column" layout-align="space-around" ng-show="loading">
+      <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+    </div>
+
+  <!-- <div class='stats' ng-show="data.avgKDA"> -->
+    <div class = "info" ng-show="data.avgKDA">
+      <div class="wardPlaced">
+        <span>Average Ward Placed: {{data.avgWard}}</span>
+      </div>
+      <div class="gpm">
+        <span>Average Gold Per Minute: {{data.avgGPM}}</span>
+      </div>
+      <div class="kda">
+        <span> Average KDA: {{data.avgKDA}}</span>
+      </div>
+    </div>
+
+
+  <!-- <a href="#/signup">Don't have an account? <strong>Signup</strong> ...</a> -->
 </div>

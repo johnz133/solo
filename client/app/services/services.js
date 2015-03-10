@@ -2,9 +2,11 @@ angular.module('dyerb.services', [])
 
 .factory('Home', function($http){
   var search = function(user){
+    // console.log(user);
     return $http({
       method: 'GET',
-      url: '/api/links'
+      url: '/api/'+user.region+'/'+user.name,
+      data: user
     })
     .then(function(resp) {
       return resp.data;

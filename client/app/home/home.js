@@ -8,8 +8,14 @@ angular.module('dyerb.home', ['ngMaterial', 'ngMessages'])
     region: 'na',
   };
 
+  $scope.data = {};
   $scope.search = function(){
-    Home.search($scope.user);
+    $scope.loading = true;
+    Home.search($scope.user)
+        .then(function(data){
+          $scope.data = data;
+          $scope.loading = false;
+        });
   };
   // $scope.signin = function () {
   //   Home.signin($scope.user)

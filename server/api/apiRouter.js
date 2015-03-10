@@ -3,6 +3,7 @@ var apiController = require('./apiController.js');
 module.exports = function(app){
   //app = apiRouter injected from middleware.js
 
+  app.param('region', apiController.addRegion);
   // app.param will hijack any request with a 'name'
   // parameter below on the get function.
   // this code will actually become the summoner id
@@ -14,5 +15,5 @@ module.exports = function(app){
      .get(apiController.get);
 
   //TODO is it get recent games, or analyzeGames?
-  app.get('/:name', apiController.getRecentGames);
+  app.get('/:region/:name', apiController.getRecentGames);
 };
