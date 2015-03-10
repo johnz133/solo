@@ -1,7 +1,7 @@
 var Q         = require('q'),
     Summoner  = require('./summonerModel.js');
 
-var config      = require('./../config.js');
+var config    = process.env.riotKey || require('./../config.js');
 var LolApi = require('leagueapi');
 LolApi.init(process.env.riotKey || config.apiKey, 'na');
 
