@@ -1,8 +1,8 @@
 var express     = require('express'),
     mongoose    = require('mongoose'),
-    config      = require('./config.js'),
     champId     = require('./championKey.js');
 
+// var config      = require('./config.js') ;
 var app = express();
 
 // var LolApi = require('leagueapi');
