@@ -5,6 +5,7 @@ server/config.js
 # Logs
 logs
 *.log
+/Notes
 
 # Runtime data
 pids

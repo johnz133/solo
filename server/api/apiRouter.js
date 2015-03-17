@@ -15,5 +15,5 @@ module.exports = function(app){
      .get(apiController.get);
 
   //TODO is it get recent games, or analyzeGames?
-  app.get('/:region/:name', apiController.getRecentGames);
+  app.get('/:region/:name', apiController.handleRequest);
 };
