@@ -6,6 +6,12 @@ var SummonerSchema = new mongoose.Schema({
   name: String,
   lowerCaseName: String,
   lastUpdated: Number,
+  totalGameTime: Number,
+  totalGoldEarned: Number,
+  totalKill: Number,
+  totalDeath: Number,
+  totalWardsPlaced: Number,
+  totalGamesPlayed: Number,
   avgGPM: Number,
   avgKDA: Number,
   avgWard: Number //avg ward placed

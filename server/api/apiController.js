@@ -1,8 +1,8 @@
-
 (function () {
 
     'use strict';
-    var Q         = require('q'),
+    //TODO: either refactor or combine for readability
+    var Q     = require('q'),
     Summoner  = require('./SummonerModel.js'),
     Match     = require(('./MatchModel.js'));
 
@@ -11,11 +11,12 @@
     LolApi.init(process.env.riotKey || config.apiKey, 'na');
 
     var apiController = {};
-    // module.exports = {
+
     apiController.addRegion = function(req, res, next, region){
       req.region = region;
       next();
     };
+
     apiController.findSummonerID = function(req, res, next, name) {
       var findID = Q.nbind(Summoner.findOne, Summoner);
       findID({lowerCaseName: name.toLowerCase()})
@@ -84,75 +85,39 @@
       res.json({yo:'yo'});
     };
 
-    //TODO refactor this with Q
+    //TODO refactor this with Q,
     var getMatchHistory = function(req, res, cb){
-      LolApi.getMatchHistory(req.id, [{beginIndex:1, endIndex:15}], req.region, function(err, matches){
+      LolApi.getMatchHistory(req.id, {endIndex:15}, req.region, function(err, matches){
         if(err){
           console.error(err);
           // next(new Error(err));
         }
-        if(!matches){
-          //?????
-        }
-        console.log('hello');
-
         if(Object.keys(matches).length === 0){
           console.log("No ranked games available!");
           res.json({
             summoner: 'doesnt have any ranked games'
           });
         }
-
-        // console.log(matches);
-        // next();
-        var createMatch = Q.nbind(Match.create, Match);
-        var findMatch = Q.nbind(Match.findOne, Match);
-
-        var i = 0;
-        // createMatch(matches.matches[i])
-        //   .then(function(createdMatch){
-        //     if(i < matches.matches.length){
-        //       // createMatch.
-        //     }
-        //   });
-        for(; i < matches.matches.length-1; i++){
-          findMatch({matchId: matches.matches[i].matchId})
+        var findOneAndUpdate = Q.nbind(Match.findOneAndUpdate, Match);
+        var counter = 0;
+        for(var i = 0; i < matches.matches.length; i++){
+          console.log(i, matches.matches[i].matchId);
+          counter++;
+          findOneAndUpdate({matchId: matches.matches[i].matchId}, matches.matches[i], {upsert:true})
             .then(function(match){
               if(match){
-                console.log('match '+match.matchId+' already exists');
+                console.log('match', match.matchId, 'found!');
               } else {
-                console.log('creating new match...', matches.matches[i].matchId);
-                createMatch(matches.matches[i]);
+                //match is null, error!
+                console.log('?');
+              }
+              counter--;
+              if(counter === 0){
+                console.log('last match!');
+                cb(req, res);
               }
             });
         }
-        findMatch({matchId: matches.matches[i].matchId})
-          .then(function(match){
-            if(match){
-              console.log('match '+match.matchId+' already exists');
-              cb(req, res);
-              // res.json({
-              //   avgWard: 1,
-              //   avgGPM: 333,
-              //   avgKDA: 3,
-              //   length: 7
-              // });
-            } else {
-              // console.log("match is null:", match);
-              console.log('creating new match...', matches.matches[i].matchId);
-              // createMatch(matches.matches[i]);
-              createMatch(matches.matches[i])
-                .then(function(createdMatch){
-                  cb(req, res);
-                  // res.json({
-                  //   avgWard: 1,
-                  //   avgGPM: 333,
-                  //   avgKDA: 3,
-                  //   length: 7
-                  // });
-                });
-            }
-          });
       });
     };
 
@@ -174,7 +139,7 @@
       findMatches({'participantIdentities.player.summonerId':req.id})
         .then(function(matches){
           // console.log(matches);
-          var avgWard, avgGPM, avgKDA, match, participantId, j, length;
+          var avgWard, avgGPM, avgKDA, match, participantId, j, length, stats;
           avgWard = avgGPM = avgKDA = 0;
           for(var i = 0; i < matches.length; i++){
             match = matches[i];
@@ -186,12 +151,11 @@
               }
             }
             for(j = 0; j < length; j++){
+              stats = match.participants[j].stats;
               if(match.participants[j].participantId === participantId){
-                avgWard += match.participants[j].stats.wardsPlaced;
-                avgGPM += match.participants[j].stats.goldEarned/60;
-                avgKDA += (match.participants[j].stats.kills +
-                           match.participants[j].stats.assists) /
-                           match.participants[j].stats.deaths;
+                avgWard += stats.wardsPlaced;
+                avgGPM += stats.goldEarned/60;
+                avgKDA += (stats.kills + stats.assists) / stats.deaths;
               }
             }
           }
@@ -200,6 +164,7 @@
           avgGPM = (avgGPM/matches.length).toFixed(2);
           console.log('yeah!');
           res.json({
+            matches: matches,
             avgWard: avgWard,
             avgGPM: avgGPM,
             avgKDA: avgKDA,
@@ -207,6 +172,7 @@
         });
     };
 
+    //obsolete
     var getRecentGames = function(req, res, next){
       // var id = req.id;
       // console.log(req.id);
@@ -253,6 +219,6 @@
       // res.json({games: 's'});
       // next();
     };
-    // };
+
   module.exports = apiController;
 }());
