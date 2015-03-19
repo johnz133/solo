@@ -1,47 +1,82 @@
-<div id='home'>
-  <md-toolbar>
-  <h2 class="md-toolbar-tools">
-    <span>Do You Even Rift, Bro?</span>
-  </h2>
-</md-toolbar>
-<form name="searchForm" ng-submit='search()' layout="row" layout-sm="column" layout-align="space-around">
-  <!-- <input type='text'ng-model='user.name'> -->
-  <!-- <input type="select" ng-model='user.password'> -->
-  <md-input-container required flex>
-  <label>Summoner Name</label>
-  <input required name="summonerName" ng-model="user.name" placeholder="">
-  <div ng-messages="searchForm.summonerName.$error">
-    <div ng-message="required">This is required.</div>
-  </div>
-</md-input-container>
-  <md-select required ng-model="user.region" placeholder="Region">
-  <md-option value="NA" selected="selected">NA</md-option>
-  <md-option value="EUW">EUW</md-option>
-</md-select>
-  <md-button ng-click="selected=true">Search</md-button>
-<!-- <button>Search</button> -->
-</form>
-<div layout="row" layout-sm="column" layout-align="space-around" ng-show="loading">
-  <md-progress-linear md-mode="indeterminate"></md-progress-linear>
-</div>
+<div class="site-wrapper-inner">
+  <div class="cover-container">
+    <div class="masthead clearfix">
+      <div class="inner">
+        <h3 class="masthead-brand">DYERB</h3>
+        <nav>
+          <ul class="nav masthead-nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#/compare">Compare</a></li>
+            <li><a ng-click="login()" href="">Login with Git</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
 
-<!-- <div class='stats' ng-show="data.avgKDA"> -->
-<div>
-  <a href="" ng-repeat="match in data" ng-click="compareGame(match)">
-    {{match.matchId}} |
-  </a>
-</div>
-<div class = "info" ng-if="data">
-  <div class='bar'>
-  <canvas id="bar" class="chart chart-bar" data="wardData" series='series'
-  labels="['Wards Placed']"></canvas></div>
-  <div class='bar'>
-  <canvas id="bar" class="chart chart-bar" data="GPMData" series="series"
-  labels="['Gold Per Minute']"></canvas></div>
-  <div class='bar'>
-  <canvas id="bar" class="chart chart-bar" data="KDAData" series="series"
-  labels="['KDA Ratio']"></canvas></div>
+    <div class="inner cover" id='home'>
+      <!-- <md-toolbar>
+        <h2 class="md-toolbar-tools">
+          <span>Do You Even Rift, Bro?</span>
+        </h2>
+      </md-toolbar> -->
+      <div ng-if="!data">
+        <h1 class="cover-heading">Do You Even Rift, Bro?</h1>
+        <p class="lead">We're your personal fitness tracker for your time on the rift</p>
+        <p class="lead">
+          <form name="searchForm" ng-submit='search()' layout="row" layout-sm="column" layout-align="space-around">
+            <!-- <input type='text'ng-model='user.name'> -->
+            <!-- <input type="select" ng-model='user.password'> -->
+            <md-input-container required flex>
+            <label>Summoner Name</label>
+            <input required name="summonerName" ng-model="user.name" placeholder="">
+            <div ng-messages="searchForm.summonerName.$error">
+              <div ng-message="required">This is required.</div>
+            </div>
+            </md-input-container>
+            <md-select required ng-model="user.region" placeholder="Region">
+            <md-option value="NA" selected="selected">NA</md-option>
+            <md-option value="EUW">EUW</md-option>
+          </md-select>
+          <md-button ng-click="selected=true">Search</md-button>
+        </form>
+          <!-- <md-content md-theme="docs-dark" class="md-padding" layout="row" layout-sm="column" style="font-size:1.2em">
+            <md-input-container required flex>
+              <label>Github Username</label>
+              <input required ng-keypress="($event.which === 13)?getAllWeeklyData():0" name="username" ng-model="currentUser.username" placeholder="">
+            </md-input-container>
+            <md-button ng-click="getAllWeeklyData()">Search</md-button>
+          </md-content> -->
+        </p>
+      </div>
 
-</div>
-<!-- <a href="#/signup">Don't have an account? <strong>Signup</strong> ...</a> -->
-</div>
+
+      <div layout="row" layout-sm="column" layout-align="space-around" ng-if="loading">
+        <md-progress-linear md-mode="indeterminate"></md-progress-linear>
+      </div>
+
+      <div class = "info" ng-if="data">
+        <div>
+          <a href="" ng-repeat="match in data" ng-click="compareGame(match)">
+            {{match.matchId}} |
+          </a>
+        </div>
+        <div class='bar'>
+        <canvas id="bar" class="chart chart-bar" data="wardData" series='series'
+        labels="['Wards Placed']"></canvas></div>
+        <div class='bar'>
+        <canvas id="bar" class="chart chart-bar" data="GPMData" series="series"
+        labels="['Gold Per Minute']"></canvas></div>
+        <div class='bar'>
+        <canvas id="bar" class="chart chart-bar" data="KDAData" series="series"
+        labels="['KDA Ratio']"></canvas></div>
+
+      </div>
+    </div>
+    <div class="mastfoot">
+        <div class="inner">
+          <p>Cover template for <a href="http://getbootstrap.com">Bootstrap</a>, by <a href="https://twitter.com/mdo">@mdo</a>.</p>
+        </div>
+      </div>
+  <!-- <a href="#/signup">Don't have an account? <strong>Signup</strong> ...</a> -->
+  </div> <!-- cover container -->
+</div>  <!-- sitewrapper -->

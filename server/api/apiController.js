@@ -68,7 +68,7 @@
 
                     } else {
                       // res.send(req.body);
-                      console.errer(name + 'doest exist!');
+                      console.error(name + 'doest exist!');
                       // next(new Error(name + " don't exist!"));
                         //TODO: tell the user this name doesn't exist
                         res.json({
@@ -98,6 +98,7 @@
         }
         if(!matches){
           console.log('failed to get matches');
+          //TODO: try again
         }
 
         if(Object.keys(matches).length === 0){
@@ -105,26 +106,27 @@
           res.json({
             summoner: 'doesnt have any ranked games'
           });
-        }
-        var findOneAndUpdate = Q.nbind(Match.findOneAndUpdate, Match);
+        } else {
+          var findOneAndUpdate = Q.nbind(Match.findOneAndUpdate, Match);
 
-        var counter = 0;
-        for(var i = 0; i < matches.matches.length; i++){
-          console.log(i, matches.matches[i].matchId);
-          counter++;
-          findOneAndUpdate({matchId: matches.matches[i].matchId}, matches.matches[i], {upsert:true})
-            .then(function(match){
-              if(match){
-                console.log('match', match.matchId, 'successfully updated!');
-              } else {
-                console.error('failed to updated match!');
-              }
-              counter--;
-              if(counter === 0){
-                console.log('last match!');
-                cb(req, res);
-              }
-            });
+          var counter = 0;
+          for(var i = 0; i < matches.matches.length; i++){
+            console.log(i, matches.matches[i].matchId);
+            counter++;
+            findOneAndUpdate({matchId: matches.matches[i].matchId}, matches.matches[i], {upsert:true})
+              .then(function(match){
+                if(match){
+                  console.log('match', match.matchId, 'successfully updated!');
+                } else {
+                  console.error('failed to updated match!');
+                }
+                counter--;
+                if(counter === 0){
+                  console.log('last match!');
+                  cb(req, res);
+                }
+              });
+          }
         }
       });
     };
