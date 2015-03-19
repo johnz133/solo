@@ -5,6 +5,8 @@ var SummonerSchema = new mongoose.Schema({
   id: Number,
   name: String,
   lowerCaseName: String,
+  profileIconId: Number,
+  matchHistoryUri: String,
   lastUpdated: Number,
   totalGameTime: Number,
   totalGoldEarned: Number,

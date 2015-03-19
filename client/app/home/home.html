@@ -26,8 +26,12 @@
 </div>
 
 <!-- <div class='stats' ng-show="data.avgKDA"> -->
-
-<div class = "info" ng-show="data.avgKDA">
+<div>
+  <a href="" ng-repeat="match in data" ng-click="compareGame(match)">
+    {{match.matchId}} |
+  </a>
+</div>
+<div class = "info" ng-if="data">
   <div class='bar'>
   <canvas id="bar" class="chart chart-bar" data="wardData" series='series'
   labels="['Wards Placed']"></canvas></div>
@@ -37,60 +41,7 @@
   <div class='bar'>
   <canvas id="bar" class="chart chart-bar" data="KDAData" series="series"
   labels="['KDA Ratio']"></canvas></div>
-  <!-- <md-grid-list md-cols-sm="1" md-cols-md="2" md-cols-gt-md="6" md-row-height-gt-md="1:1" md-row-height="2:2" md-gutter="12x" md-gutter-gt-sm="8px" >
-    <md-grid-tile class="green" md-rowspan="2" md-colspan="2">
-      <div class="wardPlaced">
-          <h1>{{data.avgWard}}</h1>
 
-      </div>
-        <md-grid-tile-header>
-          <h3>Average Ward Placed</h3>
-        </md-grid-tile-header>
-      <md-grid-tile-footer>
-        <h3>#1: (2r x 2c)</h3>
-      </md-grid-tile-footer>
-    </md-grid-tile>
-    <md-grid-tile class="red">
-      <div class="kda">
-        <md-grid-tile-header>
-          <h3>Average KDA</h3>
-        </md-grid-tile-header>
-        <h1> {{data.avgKDA}}</h1>
-      </div>
-      <md-grid-tile-footer>
-        <h3>#2: (1r x 1c)</h3>
-      </md-grid-tile-footer>
-    </md-grid-tile>
-    <md-grid-tile class="gray">
-      <div class="gpm">
-        <md-grid-tile-header>
-          <h3>Average GPM:</h3>
-        </md-grid-tile-header>
-        <h1>{{data.avgGPM}}</h1>
-      </div>
-      <md-grid-tile-footer>
-        <h3>#3: (1r x 1c)</h3>
-      </md-grid-tile-footer>
-    </md-grid-tile>
-    <md-grid-tile class="blue"
-    md-rowspan="1">
-      <md-grid-tile-footer>
-        <h3>#4: (1r x 1c)</h3>
-      </md-grid-tile-footer>
-    </md-grid-tile>
-    <md-grid-tile class="red"
-    md-rowspan="2" md-colspan="2">
-      <md-grid-tile-footer>
-        <h3>#5: (2r x 2c)</h3>
-      </md-grid-tile-footer>
-    </md-grid-tile>
-    <md-grid-tile class="green"
-    md-rowspan="1" >
-    <md-grid-tile-footer>
-      <h3>#6: (1r x 1c)</h3>
-    </md-grid-tile-footer>
-    </md-grid-tile>
-  </md-grid-list> -->
 </div>
 <!-- <a href="#/signup">Don't have an account? <strong>Signup</strong> ...</a> -->
 </div>

@@ -31,6 +31,8 @@
                 // }
                 // console.log("GET:", summoner);
                 req.id = summoner.id;
+                req.name = summoner.name;
+                req.profileIconId = summoner.profileIconId;
                 req.lastUpdated = summoner.lastUpdated;
                 // var updateTime = Q.nbind(Summoner.update, Summoner);
                 // updateTime({id: req.id}, {
@@ -50,6 +52,7 @@
                           name: prop,
                           lowerCaseName: prop.toLowerCase(),
                           id: summoner[prop].id,
+                          profileIconId: summoner[prop].profileIconId,
                           lastUpdated: Date.now(),
                           avgGPM: 0,
                           avgWard: 0,
@@ -86,12 +89,17 @@
     };
 
     //TODO refactor this with Q,
+    //TODO refactor inputing array
     var getMatchHistory = function(req, res, cb){
       LolApi.getMatchHistory(req.id, {endIndex:15}, req.region, function(err, matches){
         if(err){
           console.error(err);
           // next(new Error(err));
         }
+        if(!matches){
+          console.log('failed to get matches');
+        }
+
         if(Object.keys(matches).length === 0){
           console.log("No ranked games available!");
           res.json({
@@ -99,6 +107,7 @@
           });
         }
         var findOneAndUpdate = Q.nbind(Match.findOneAndUpdate, Match);
+
         var counter = 0;
         for(var i = 0; i < matches.matches.length; i++){
           console.log(i, matches.matches[i].matchId);
@@ -106,10 +115,9 @@
           findOneAndUpdate({matchId: matches.matches[i].matchId}, matches.matches[i], {upsert:true})
             .then(function(match){
               if(match){
-                console.log('match', match.matchId, 'found!');
+                console.log('match', match.matchId, 'successfully updated!');
               } else {
-                //match is null, error!
-                console.log('?');
+                console.error('failed to updated match!');
               }
               counter--;
               if(counter === 0){
