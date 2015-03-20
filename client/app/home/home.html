@@ -6,8 +6,8 @@
         <nav>
           <ul class="nav masthead-nav">
             <li class="active"><a href="#">Home</a></li>
-            <li><a href="#/compare">Compare</a></li>
-            <li><a ng-click="login()" href="">Login with Git</a></li>
+            <li><a href="#/">Compare</a></li>
+            <li><a ng-click="" href="">About</a></li>
           </ul>
         </nav>
       </div>
@@ -50,31 +50,48 @@
       </div>
 
 
-      <div layout="row" layout-sm="column" layout-align="space-around" ng-if="loading">
-        <md-progress-linear md-mode="indeterminate"></md-progress-linear>
+    </div>
+    <div layout="row" layout-sm="column" layout-align="space-around" ng-if="loading">
+      <md-progress-linear md-mode="indeterminate"></md-progress-linear>
+    </div>
+
+    <div class = "info" ng-if="data">
+      <div>
+        <a href="" ng-repeat="match in data" ng-click="compareGame(match)">
+          {{match.matchId}} |
+        </a>
+      </div>
+      <div>
+        <a href="" ng-repeat="stat in stats" ng-click="analyzeStat(null, stat)">
+          {{stat}} |
+        </a>
+      </div>
+      <div>
+        <a href="" ng-if="!split" ng-click="analyzeStat(true)">
+          Turn On Split
+        </a>
+      </div>
+      <div>
+        <a href="" ng-if="split" ng-click="analyzeStat(false)">
+          Turn Off Split
+        </a>
+      </div>
+        <canvas id="line" class="chart chart-line" data="lineData" labels="lineLabel" legend="true" series="lineSeries" click=""> </canvas>
+      <div class='bar'>
+        <canvas id="bar" class="chart chart-bar" data="wardData" series='series' labels="['Wards Placed']"></canvas>
+      </div>
+      <div class='bar'>
+        <canvas id="bar" class="chart chart-bar" data="GPMData" series="series" labels="['Gold Per Minute']"></canvas>
+      </div>
+      <div class='bar'>
+        <canvas id="bar" class="chart chart-bar" data="KDAData" series="series" labels="['KDA Ratio']"></canvas>
       </div>
 
-      <div class = "info" ng-if="data">
-        <div>
-          <a href="" ng-repeat="match in data" ng-click="compareGame(match)">
-            {{match.matchId}} |
-          </a>
-        </div>
-        <div class='bar'>
-        <canvas id="bar" class="chart chart-bar" data="wardData" series='series'
-        labels="['Wards Placed']"></canvas></div>
-        <div class='bar'>
-        <canvas id="bar" class="chart chart-bar" data="GPMData" series="series"
-        labels="['Gold Per Minute']"></canvas></div>
-        <div class='bar'>
-        <canvas id="bar" class="chart chart-bar" data="KDAData" series="series"
-        labels="['KDA Ratio']"></canvas></div>
-
-      </div>
     </div>
     <div class="mastfoot">
+          <!-- <p>Do You Even Rift Bro isn’t endorsed by Riot Games and doesn’t reflect the views or opinions of Riot Games or anyone officially involved in producing or managing League of Legends. League of Legends and Riot Games are trademarks or registered trademarks of Riot Games, Inc. League of Legends © Riot Games, Inc.</p> -->
         <div class="inner">
-          <p>Cover template for <a href="http://getbootstrap.com">Bootstrap</a>, by <a href="https://twitter.com/mdo">@mdo</a>.</p>
+          <!-- <p>Cover template for <a href="http://getbootstrap.com">Bootstrap</a>, by <a href="https://twitter.com/mdo">@mdo</a>.</p> -->
         </div>
       </div>
   <!-- <a href="#/signup">Don't have an account? <strong>Signup</strong> ...</a> -->

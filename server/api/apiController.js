@@ -174,10 +174,7 @@
           avgGPM = (avgGPM/matches.length).toFixed(2);
           console.log('yeah!');
           res.json({
-            matches: matches,
-            avgWard: avgWard,
-            avgGPM: avgGPM,
-            avgKDA: avgKDA,
+            matches: matches
           });
         });
     };

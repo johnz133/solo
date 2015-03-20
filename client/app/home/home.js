@@ -27,6 +27,12 @@ angular.module('dyerb.home', ['ngMaterial', 'ngMessages', 'chart.js'])
     // [28, 48, 40, 19, 86, 27, 90]
   ];
 
+  $scope.split = false;
+  $scope.lineStat = 0;
+  $scope.stats = ['Gold Per Minute', 'KDA Ratio', 'Wards Placed'];
+  $scope.lineSeries = ['Gold Per Minute'];
+  $scope.lineLabel = [];
+  $scope.lineData = [[]];
 
   $scope.data = undefined;
   $scope.search = function(){
@@ -56,6 +62,8 @@ angular.module('dyerb.home', ['ngMaterial', 'ngMessages', 'chart.js'])
           break;
         }
       }
+      $scope.lineLabel.push(''+i);
+      $scope.lineData[0].push((participants.stats.goldEarned / $scope.data[i].matchDuration * 60).toFixed(2));
 
       avgGPM += participants.stats.goldEarned / $scope.data[i].matchDuration * 60;
       avgKDA += (participants.stats.assists + participants.stats.kills) / participants.stats.deaths;
@@ -72,22 +80,79 @@ angular.module('dyerb.home', ['ngMaterial', 'ngMessages', 'chart.js'])
 
   $scope.compareGame = function(match){
     var participantId, participants;
-    for(var j = 0; j < match.participantIdentities.length; j++){
-      if(match.participantIdentities[j].player.summonerName.toLowerCase() === $scope.user.name.toLowerCase()){
-        participantId = match.participantIdentities[j].participantId;
+    for(var i = 0; i < match.participantIdentities.length; i++){
+      if(match.participantIdentities[i].player.summonerName.toLowerCase() === $scope.user.name.toLowerCase()){
+        participantId = match.participantIdentities[i].participantId;
         break;
       }
     }
-    for (j = 0; j < match.participants.length; j++) {
-      if(match.participants[j].participantId === participantId){
-        participants = match.participants[j];
+    for (i = 0; i < match.participants.length; i++) {
+      if(match.participants[i].participantId === participantId){
+        participants = match.participants[i];
         break;
       }
     }
     $scope.wardData[1][0] = participants.stats.wardsPlaced;
-    $scope.GPMData[1][0] = (participants.stats.goldEarned/$scope.data[$scope.data.length-1].matchDuration*60).toFixed(2)
+    $scope.GPMData[1][0] = (participants.stats.goldEarned/$scope.data[$scope.data.length-1].matchDuration*60).toFixed(2);
     $scope.KDAData[1][0] = ((participants.stats.assists + participants.stats.kills) / participants.stats.deaths).toFixed(2);
 
+  };
+
+  //TODO Refactor!
+  //TODO: labels
+  $scope.analyzeStat = function(split, stat){
+    if(split !== null){
+      $scope.split = split;
+    }
+    if(stat){
+      $scope.lineStat = $scope.stats.indexOf(stat);
+    } else {
+      stat = $scope.stats[$scope.lineStat];
+    }
+    var participantId, participants;
+    $scope.lineData = $scope.split ? [[],[]] : [[]];
+    $scope.lineSeries = $scope.split ? ['Winning '+stat, 'Losing '+stat] : [stat];
+    for(var i = 0; i < $scope.data.length; i++){
+      for(var j = 0; j < $scope.data[i].participantIdentities.length; j++){
+        if($scope.data[i].participantIdentities[j].player.summonerName.toLowerCase() === $scope.user.name.toLowerCase()){
+          participantId = $scope.data[i].participantIdentities[j].participantId;
+          break;
+        }
+      }
+      for (j = 0; j < $scope.data[i].participants.length; j++) {
+        if($scope.data[i].participants[j].participantId === participantId){
+          participants = $scope.data[i].participants[j];
+          break;
+        }
+      }
+      if($scope.split){
+        switch(stat){
+          case 'Gold Per Minute':
+            $scope.lineData[+participants.stats.winner].push((participants.stats.goldEarned / $scope.data[i].matchDuration * 60).toFixed(2));
+            break;
+          case 'KDA Ratio':
+            $scope.lineData[+participants.stats.winner].push(((participants.stats.assists + participants.stats.kills) / participants.stats.deaths).toFixed(2));
+            break;
+          case 'Wards Placed':
+            $scope.lineData[+participants.stats.winner].push(participants.stats.wardsPlaced);
+            break;
+          default:
+        }
+      } else {
+        switch(stat){
+          case 'Gold Per Minute':
+            $scope.lineData[0].push((participants.stats.goldEarned / $scope.data[i].matchDuration * 60).toFixed(2));
+            break;
+          case 'KDA Ratio':
+            $scope.lineData[0].push(((participants.stats.assists + participants.stats.kills) / participants.stats.deaths).toFixed(2));
+            break;
+          case 'Wards Placed':
+            $scope.lineData[0].push(participants.stats.wardsPlaced);
+            break;
+          default:
+        }
+      }
+    }
   };
   // $scope.signin = function () {
   //   Home.signin($scope.user)
