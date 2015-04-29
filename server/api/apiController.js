@@ -22,24 +22,10 @@
       findID({lowerCaseName: name.toLowerCase()})
             .then(function (summoner){
               if(summoner){
-                // if(summoner.lastUpdated + 3600000 > Date.now()){
-                  //TODO: just query the db for the data
-                  // console.log("you've updated already!");
-                  // res.json({
-                  //   summoner: 'check back in ' + Math.floor((summoner.lastUpdated+3600000-Date.now() / (60 * 1000)) % 60)
-                  // });
-                // }
-                // console.log("GET:", summoner);
                 req.id = summoner.id;
                 req.name = summoner.name;
                 req.profileIconId = summoner.profileIconId;
                 req.lastUpdated = summoner.lastUpdated;
-                // var updateTime = Q.nbind(Summoner.update, Summoner);
-                // updateTime({id: req.id}, {
-                //   lastUpdated: Date.now()
-                // }).then(function(){
-                //   next();
-                // });
                 next();
               } else {
                 LolApi.Summoner.getByName(name, function(err, summoner) {
@@ -57,6 +43,7 @@
                           avgGPM: 0,
                           avgWard: 0,
                           avgKDA: 0
+
                         };
                       }
                       createSummoner(newSummoner)
@@ -67,7 +54,6 @@
                         });
 
                     } else {
-                      // res.send(req.body);
                       console.error(name + 'doest exist!');
                       // next(new Error(name + " don't exist!"));
                         //TODO: tell the user this name doesn't exist
@@ -181,14 +167,10 @@
 
     //obsolete
     var getRecentGames = function(req, res, next){
-      // var id = req.id;
-      // console.log(req.id);
       LolApi.getRecentGames(req.id, req.region, function(err, games){
         if(err) {
           next(new Error(err));
-          // console.log(err);
         }
-        // console.log(games);
 
         //analyze games!
         var avgWard = 0;
@@ -212,9 +194,6 @@
           avgGPM: avgGPM,
           avgKDA: avgKDA
         }).exec();
-        // console.log('average ward placed: ', avgWard/10);
-        // console.log('average gpm: ', (avgGPM/10).toFixed(2));
-        // console.log('average KDA: ', avgKDA/ 10);
         res.json({
           avgWard: avgWard,
           avgGPM: avgGPM,

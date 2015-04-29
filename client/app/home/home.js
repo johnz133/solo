@@ -1,6 +1,3 @@
-// do not tamper with this code in here, study it, but do not touch
-// this Auth controller is responsible for our client side authentication
-// in our signup/signin forms using the injected Auth service
 angular.module('dyerb.home', ['ngMaterial', 'ngMessages', 'chart.js'])
 
 .controller('HomeController', function ($scope, $window, $location, Home) {
@@ -8,25 +5,13 @@ angular.module('dyerb.home', ['ngMaterial', 'ngMessages', 'chart.js'])
     region: 'na',
   };
 
-  // $scope.testLabels = ['2006', '2007', '2008', '2009', '2010', '2011', '2012'];
-  // $scope.testSeries = ['Series A', 'Series B'];
-
-  // $scope.testData = [
-  //   [65, 59, 80, 81, 56, 55, 40],
-  //   [28, 48, 40, 19, 86, 27, 90]
-  // ];
-
   $scope.series = ['Average', 'Last Game'];
 
-  // $scope.GPMData = [];
-  // $scope.wardData = [];
-  // $scope.KDAData = [];
   $scope.data2 = [
     ['7'],['400'],['1.5']
-    // [65, 59, 80, 81, 56, 55, 40],
-    // [28, 48, 40, 19, 86, 27, 90]
   ];
 
+  $scope.numMatches = 10;
   $scope.split = false;
   $scope.lineStat = 0;
   $scope.stats = ['Gold Per Minute', 'KDA Ratio', 'Wards Placed'];
@@ -40,16 +25,17 @@ angular.module('dyerb.home', ['ngMaterial', 'ngMessages', 'chart.js'])
     Home.search($scope.user)
         .then(function(data){
           $scope.data = data.matches;
-          analyze();
+          analyzeAverage();
+          $scope.analyzeStat();
           $scope.loading = false;
           console.log(data);
         });
   };
 
-  var analyze = function(){
+  var analyzeAverage = function(){
     var avgGPM, avgKDA, avgWard, participantId, participants;
     avgGPM = avgKDA = avgWard = 0;
-    for(var i = 0; i < $scope.data.length; i++){
+    for(var i = 0; i < Math.min($scope.data.length, $scope.numMatches); i++){
       for(var j = 0; j < $scope.data[i].participantIdentities.length; j++){
         if($scope.data[i].participantIdentities[j].player.summonerName.toLowerCase() === $scope.user.name.toLowerCase()){
           participantId = $scope.data[i].participantIdentities[j].participantId;
@@ -62,18 +48,16 @@ angular.module('dyerb.home', ['ngMaterial', 'ngMessages', 'chart.js'])
           break;
         }
       }
-      $scope.lineLabel.push(''+i);
-      $scope.lineData[0].push((participants.stats.goldEarned / $scope.data[i].matchDuration * 60).toFixed(2));
 
       avgGPM += participants.stats.goldEarned / $scope.data[i].matchDuration * 60;
       avgKDA += (participants.stats.assists + participants.stats.kills) / participants.stats.deaths;
       avgWard += participants.stats.wardsPlaced;
     }
-    avgKDA = +(avgKDA/$scope.data.length).toFixed(2);
-    avgGPM = +(avgGPM/$scope.data.length).toFixed(2);
-    avgWard = +(avgWard/$scope.data.length).toFixed(2);
+    avgKDA = +(avgKDA/Math.min($scope.data.length, $scope.numMatches)).toFixed(2);
+    avgGPM = +(avgGPM/Math.min($scope.data.length, $scope.numMatches)).toFixed(2);
+    avgWard = +(avgWard/Math.min($scope.data.length, $scope.numMatches)).toFixed(2);
     $scope.wardData = [[avgWard], [participants.stats.wardsPlaced]];
-    $scope.GPMData = [[avgGPM], [(participants.stats.goldEarned/$scope.data[$scope.data.length-1].matchDuration*60).toFixed(2)]];
+    $scope.GPMData = [[avgGPM], [(participants.stats.goldEarned/$scope.data[Math.min($scope.data.length, $scope.numMatches)-1].matchDuration*60).toFixed(2)]];
     $scope.KDAData = [[avgKDA], [((participants.stats.assists + participants.stats.kills) / participants.stats.deaths).toFixed(2)]];
 
   };
@@ -93,15 +77,15 @@ angular.module('dyerb.home', ['ngMaterial', 'ngMessages', 'chart.js'])
       }
     }
     $scope.wardData[1][0] = participants.stats.wardsPlaced;
+    //this just gets the time for the last game, fix!
     $scope.GPMData[1][0] = (participants.stats.goldEarned/$scope.data[$scope.data.length-1].matchDuration*60).toFixed(2);
     $scope.KDAData[1][0] = ((participants.stats.assists + participants.stats.kills) / participants.stats.deaths).toFixed(2);
-
   };
 
   //TODO Refactor!
   //TODO: labels
   $scope.analyzeStat = function(split, stat){
-    if(split !== null){
+    if(split !== undefined){
       $scope.split = split;
     }
     if(stat){
@@ -112,7 +96,8 @@ angular.module('dyerb.home', ['ngMaterial', 'ngMessages', 'chart.js'])
     var participantId, participants;
     $scope.lineData = $scope.split ? [[],[]] : [[]];
     $scope.lineSeries = $scope.split ? ['Winning '+stat, 'Losing '+stat] : [stat];
-    for(var i = 0; i < $scope.data.length; i++){
+    $scope.lineLabel = [];
+    for(var i = 0; i < Math.min($scope.data.length, $scope.numMatches); i++){
       for(var j = 0; j < $scope.data[i].participantIdentities.length; j++){
         if($scope.data[i].participantIdentities[j].player.summonerName.toLowerCase() === $scope.user.name.toLowerCase()){
           participantId = $scope.data[i].participantIdentities[j].participantId;
@@ -125,54 +110,28 @@ angular.module('dyerb.home', ['ngMaterial', 'ngMessages', 'chart.js'])
           break;
         }
       }
-      if($scope.split){
-        switch(stat){
-          case 'Gold Per Minute':
-            $scope.lineData[+participants.stats.winner].push((participants.stats.goldEarned / $scope.data[i].matchDuration * 60).toFixed(2));
-            break;
-          case 'KDA Ratio':
-            $scope.lineData[+participants.stats.winner].push(((participants.stats.assists + participants.stats.kills) / participants.stats.deaths).toFixed(2));
-            break;
-          case 'Wards Placed':
-            $scope.lineData[+participants.stats.winner].push(participants.stats.wardsPlaced);
-            break;
-          default:
-        }
-      } else {
-        switch(stat){
-          case 'Gold Per Minute':
-            $scope.lineData[0].push((participants.stats.goldEarned / $scope.data[i].matchDuration * 60).toFixed(2));
-            break;
-          case 'KDA Ratio':
-            $scope.lineData[0].push(((participants.stats.assists + participants.stats.kills) / participants.stats.deaths).toFixed(2));
-            break;
-          case 'Wards Placed':
-            $scope.lineData[0].push(participants.stats.wardsPlaced);
-            break;
-          default:
-        }
+      switch(stat){
+        case 'Gold Per Minute':
+          $scope.lineData[+($scope.split && participants.stats.winner)].push((participants.stats.goldEarned / $scope.data[i].matchDuration * 60).toFixed(2));
+          break;
+        case 'KDA Ratio':
+          $scope.lineData[+($scope.split && participants.stats.winner)].push(((participants.stats.assists + participants.stats.kills) / participants.stats.deaths).toFixed(2));
+          break;
+        case 'Wards Placed':
+          $scope.lineData[+($scope.split && participants.stats.winner)].push(participants.stats.wardsPlaced);
+          break;
+        default:
       }
+      $scope.lineLabel.push(""+i);
     }
   };
-  // $scope.signin = function () {
-  //   Home.signin($scope.user)
-  //     .then(function (token) {
-  //       $window.localStorage.setItem('com.shortly', token);
-  //       $location.path('/links');
-  //     })
-  //     .catch(function (error) {
-  //       console.error(error);
-  //     });
-  // };
 
-  // $scope.signup = function () {
-  //   Home.signup($scope.user)
-  //     .then(function (token) {
-  //       $window.localStorage.setItem('com.shortly', token);
-  //       $location.path('/links');
-  //     })
-  //     .catch(function (error) {
-  //       console.error(error);
-  //     });
-  // };
+  $scope.updateNumMatches = function(num){
+    $scope.numMatches = num;
+    $scope.analyzeStat();
+  };
+
+  var findParticipant = function(match){
+    return participants;
+  };
 });

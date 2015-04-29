@@ -62,10 +62,10 @@ md-grid-tile {
   margin: 20px;
   /*padding: 30px;*/
 }
-.info {
+/*.info {
   position: relative;
   margin: 20px;
-}
+}*/
 
 /*inner, #outer {
   position: absolute;
@@ -213,7 +213,7 @@ body {
 @media (min-width: 768px) {
   /* Pull out the header and footer */
   .masthead {
-    position: fixed;
+    /*position: fixed;*/
     top: 0;
   }
   .mastfoot {
@@ -221,7 +221,7 @@ body {
     bottom: 0;
   }
   /* Start the vertical centering */
-  .site-wrapper-inner {
+  .site-wrapper-inner .inner{
     vertical-align: middle;
   }
   /* Handle the widths */
