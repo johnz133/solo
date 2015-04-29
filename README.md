@@ -1,9 +1,6 @@
-## Heading ##
+## Do you even rift, bro? ##
 
 Fitness tracking for how well you're doing on the rift.
-
-## Sub-Heading ##
-Do you even rift, bro?
 
 ## Summary ##
 Want to improve as a player? We'll help you track vital stats from your games like gold per minute, objective participation, wards placed, etc and compare it to your average. You can see what you did well last match, and what you should improve on. We can identify key shortcomings that you should improve on.
